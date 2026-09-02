@@ -43,6 +43,31 @@ export class CategorySchema extends BaseModel {
   declare userId: bigint | number
 }
 
+export class TransactionSchema extends BaseModel {
+  static $columns = ['accountId', 'amount', 'categoryId', 'createdAt', 'description', 'destinationAccountId', 'id', 'transactionDate', 'type', 'updatedAt'] as const
+  $columns = TransactionSchema.$columns
+  @column()
+  declare accountId: bigint | number
+  @column()
+  declare amount: string
+  @column()
+  declare categoryId: bigint | number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare description: string | null
+  @column()
+  declare destinationAccountId: bigint | number | null
+  @column({ isPrimary: true })
+  declare id: bigint | number
+  @column.date()
+  declare transactionDate: DateTime
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
 export class UserSchema extends BaseModel {
   static $columns = ['createdAt', 'email', 'id', 'name', 'password', 'updatedAt'] as const
   $columns = UserSchema.$columns

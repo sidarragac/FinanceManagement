@@ -1,8 +1,10 @@
-import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
+import { BaseModel, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
 
 import User from '#models/user'
+import transaction from '#models/transaction'
 
 export default class Category extends BaseModel {
   @column({ isPrimary: true })
@@ -25,4 +27,7 @@ export default class Category extends BaseModel {
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
+
+  @hasMany(() => transaction)
+  declare transactions: HasMany<typeof transaction>
 }

@@ -4,21 +4,21 @@ import env from '#start/env'
 
 const dbConfig = defineConfig({
   /**
-   * Default connection used for all queries.
+   * Conexión por defecto (PostgreSQL)
    */
-  connection: env.get('DB_CONNECTION') ?? 'mysql',
+  connection: env.get('DB_CONNECTION') ?? 'postgres',
 
   /**
-   * Pretty-print SQL debug output in development logs.
+   * Imprime las consultas SQL formateadas en modo desarrollo
    */
   prettyPrintDebugQueries: true,
 
   connections: {
-    mysql: {
-      client: 'mysql2',
+    postgres: {
+      client: 'pg',
       connection: {
         host: env.get('DB_HOST'),
-        port: Number(env.get('DB_PORT')) ?? 3306,
+        port: env.get('DB_PORT') ? Number(env.get('DB_PORT')) : 5432,
         user: env.get('DB_USER'),
         password: env.get('DB_PASSWORD'),
         database: env.get('DB_DATABASE'),

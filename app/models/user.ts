@@ -1,24 +1,30 @@
-import { UserSchema } from '#database/schema'
-import hash from '@adonisjs/core/services/hash'
+import { BaseModel, column, beforeSave } from '@adonisjs/lucid/orm'
 import { compose } from '@adonisjs/core/helpers'
+import { DateTime } from 'luxon'
+import hash from '@adonisjs/core/services/hash'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 
-/**
- * User model represents a user in the application.
- * It extends UserSchema and includes authentication capabilities
- * through the withAuthFinder mixin.
- */
-export default class User extends compose(UserSchema, withAuthFinder(hash)) {
-  /**
-   * Get the user's initials from their full name or email.
-   * Returns the first letter of first and last name if available,
-   * otherwise returns the first two characters of the email username.
-   */
-  get initials() {
-    const [first, last] = this.fullName ? this.fullName.split(' ') : this.email.split('@')
-    if (first && last) {
-      return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase()
-    }
-    return `${first.slice(0, 2)}`.toUpperCase()
-  }
+const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
+  uids: ['email'],
+  passwordColumnName: 'password',
+})
+
+export default class User extends compose(BaseModel, AuthFinder) {
+  @column({ isPrimary: true })
+  declare id: number
+
+  @column()
+  declare name: string
+
+  @column()
+  declare email: string
+
+  @column({ serializeAs: null })
+  declare password: string
+
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
 }

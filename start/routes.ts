@@ -15,16 +15,16 @@ router.get('/', [controllers.Home, 'index']).as('home')
 
 router
   .group(() => {
-    router.get('signup', [controllers.NewAccount, 'create'])
-    router.post('signup', [controllers.NewAccount, 'store'])
+    router.get('signup', [controllers.Users, 'register_index']).as('auth.register.index')
+    router.post('signup', [controllers.Users, 'register']).as('auth.register.store')
 
-    router.get('login', [controllers.Session, 'create'])
-    router.post('login', [controllers.Session, 'store'])
+    router.get('login', [controllers.Users, 'login_index']).as('auth.login.index')
+    router.post('login', [controllers.Users, 'login']).as('auth.login.store')
   })
   .use(middleware.guest())
 
 router
   .group(() => {
-    router.post('logout', [controllers.Session, 'destroy'])
+    router.post('logout', [controllers.Users, 'logout']).as('auth.logout')
   })
   .use(middleware.auth())

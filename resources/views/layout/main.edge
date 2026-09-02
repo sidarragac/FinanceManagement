@@ -33,9 +33,7 @@
     </div>
   </header>
 
-  {{-- Contenido Dinámico --}}
   <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    {{-- Notificaciones Flash Globales --}}
     @if(flashMessages.has('success'))
       <div class="mb-6 p-4 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm">
         {{ flashMessages.get('success') }}
@@ -51,10 +49,8 @@
     {{{ await $slots.main() }}}
   </main>
 
-  {{-- Footer --}}
   <footer class="bg-white border-t border-gray-200 py-6 text-center text-sm text-gray-500">
     <p>&copy; {{ new Date().getFullYear() }} Finance Management. Todos los derechos reservados.</p>
   </footer>
-
 </body>
 </html>

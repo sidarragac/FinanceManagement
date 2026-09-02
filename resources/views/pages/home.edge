@@ -1,23 +1,49 @@
-@layout()
-  <div class="hero">
-    <h1>It works — welcome to the simplicity of a Hypermedia app</h1>
-    <p>A lightweight foundation for building modern web interfaces — straightforward, flexible, and true to the web's core simplicity.</p>
-  </div>
+@layout('layouts/main', { title: 'Finance Management - Controla tus Finanzas' })
 
-  <div class="cards">
-    <a href="https://insiders.adonisjs.com/docs/v7-alpha/introduction" target="_blank">
-      <h3>Official Docs &nbsp;›</h3>
-      <p>Comprehensive reference for building with AdonisJS</p>
-    </a>
+  @slot('main')
+    <section class="py-12 sm:py-20 text-center max-w-3xl mx-auto">
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight mb-6">
+        Toma el control total de tus <span class="text-indigo-600">finanzas personales</span>
+      </h1>
+      <p class="text-lg text-gray-600 mb-8 sm:text-xl">
+        Organiza tus cuentas bancarias, efectivo, gastos e ingresos en una sola plataforma segura, clara y fácil de usar.
+      </p>
 
-    <a href="https://adocasts.com/" target="_blank">
-      <h3>Adocasts &nbsp;›</h3>
-      <p>Guided video tutorials for everyday development</p>
-    </a>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        @if(auth.isAuthenticated)
+          <a href="{{ route('home') }}" class="w-full sm:w-auto bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold shadow-md hover:bg-indigo-700 transition">
+            Ir a mi Dashboard
+          </a>
+        @else
+          <a href="{{ route('auth.register.index') }}" class="w-full sm:w-auto bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold shadow-md hover:bg-indigo-700 transition">
+            Crear Cuenta Gratis
+          </a>
+          <a href="{{ route('auth.login.index') }}" class="w-full sm:w-auto bg-white border border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition">
+            Iniciar Sesión
+          </a>
+        @endif
+      </div>
+    </section>
 
-    <a href="https://discord.gg/vDcEjq6" target="_blank">
-      <h3>Discord &nbsp;›</h3>
-      <p>Connect with developers building with AdonisJS every day</p>
-    </a>
-  </div>
+    {{-- Grid de características --}}
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-8 py-12">
+      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-4 font-bold text-xl">1</div>
+        <h3 class="text-lg font-bold mb-2">Múltiples Cuentas</h3>
+        <p class="text-gray-600 text-sm">Gestiona tu efectivo, tarjetas de crédito y cuentas bancarias en un solo lugar.</p>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-4 font-bold text-xl">2</div>
+        <h3 class="text-lg font-bold mb-2">Categorización Clara</h3>
+        <p class="text-gray-600 text-sm">Clasifica tus gastos e ingresos con colores e íconos personalizados.</p>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-4 font-bold text-xl">3</div>
+        <h3 class="text-lg font-bold mb-2">Transferencias Internas</h3>
+        <p class="text-gray-600 text-sm">Mueve saldo entre tus propias cuentas manteniendo la trazabilidad exacta.</p>
+      </div>
+    </section>
+  @end
 @end

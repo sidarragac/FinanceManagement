@@ -26,6 +26,23 @@ export class AccountSchema extends BaseModel {
   declare userId: bigint | number
 }
 
+export class CategorySchema extends BaseModel {
+  static $columns = ['color', 'createdAt', 'id', 'name', 'updatedAt', 'userId'] as const
+  $columns = CategorySchema.$columns
+  @column()
+  declare color: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: bigint | number
+  @column()
+  declare name: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare userId: bigint | number
+}
+
 export class UserSchema extends BaseModel {
   static $columns = ['createdAt', 'email', 'id', 'name', 'password', 'updatedAt'] as const
   $columns = UserSchema.$columns

@@ -6,6 +6,7 @@ import type { HasMany } from '@adonisjs/lucid/types/relations'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 
 import Account from '#models/account'
+import Category from '#models/category'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -33,4 +34,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @hasMany(() => Account)
   declare accounts: HasMany<typeof Account>
+
+  @hasMany(() => Category)
+  declare categories: HasMany<typeof Category>
 }

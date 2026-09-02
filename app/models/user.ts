@@ -1,4 +1,4 @@
-import { BaseModel, column, beforeSave } from '@adonisjs/lucid/orm'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { compose } from '@adonisjs/core/helpers'
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'

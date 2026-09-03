@@ -43,3 +43,15 @@ router
     router.delete('accounts/:id', [controllers.Accounts, 'destroy']).as('accounts.destroy')
   })
   .use(middleware.auth())
+
+// Category routes
+router
+  .group(() => {
+    router.get('/categories', [controllers.Categories, 'index']).as('categories.index')
+    router.get('/categories/create', [controllers.Categories, 'create']).as('categories.create')
+    router.post('/categories', [controllers.Categories, 'store']).as('categories.store')
+    router.get('/categories/:id/edit', [controllers.Categories, 'edit']).as('categories.edit')
+    router.patch('/categories/:id', [controllers.Categories, 'update']).as('categories.update')
+    router.delete('/categories/:id', [controllers.Categories, 'destroy']).as('categories.destroy')
+  })
+  .use(middleware.auth())

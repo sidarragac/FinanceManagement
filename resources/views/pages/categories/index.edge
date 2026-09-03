@@ -1,0 +1,67 @@
+@layout('layouts/main', { title: viewData.title })
+
+  @slot('main')
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+      <div>
+        <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">{{ viewData.title }}</h1>
+        <p class="text-sm text-gray-600 mt-1">Organiza tus ingresos y gastos de forma personalizada</p>
+      </div>
+      <a
+        href="{{ route('categories.create') }}"
+        class="bg-indigo-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm hover:bg-indigo-700 transition duration-150 flex items-center gap-2"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Nueva Categoría
+      </a>
+    </div>
+
+    {{-- Lista de Categorías --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @each(category in viewData.categories)
+        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between hover:border-gray-300 transition">
+          <div class="flex items-center gap-4">
+            {{-- Badge / Color Icon --}}
+            <div
+              class="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold"
+              style="background-color: {{ category.color || '#4F46E5' }}"
+            >
+              {{ category.name.charAt(0).toUpperCase() }}
+            </div>
+            <div>
+              <h2 class="text-base font-bold text-gray-900">{{ category.name }}</h2>
+            </div>
+          </div>
+
+          {{-- Acciones (Solo para categorías personalizadas del usuario) --}}
+          @if(category.userId)
+            <div class="flex items-center gap-3 text-sm">
+              <a
+                href="{{ route('categories.edit', { id: category.id }) }}"
+                class="text-indigo-600 hover:text-indigo-900 font-medium"
+              >
+                Editar
+              </a>
+
+              <form action="{{ route('categories.destroy', { id: category.id }) }}?_method=DELETE" method="POST" class="inline">
+                {{ csrfField() }}
+                <button
+                  type="submit"
+                  class="text-red-600 hover:text-red-800 font-medium"
+                  onclick="return confirm('¿Eliminar la categoría {{ category.name }}?')"
+                >
+                  Eliminar
+                </button>
+              </form>
+            </div>
+          @endif
+        </div>
+      @else
+        <div class="col-span-full bg-white p-12 rounded-xl border border-gray-200 text-center text-gray-500">
+          No hay categorías registradas aún.
+        </div>
+      @endeach
+    </div>
+  @end
+@end

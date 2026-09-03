@@ -32,9 +32,6 @@ export default class AccountsController {
     const user = auth.getUserOrFail()
     const payload = await request.validateUsing(accountValidator)
 
-    console.log('Payload:', payload) // Log the payload to check its contents
-    console.log('User ID:', user.id) // Log the user ID to ensure it's being retrieved correctly
-
     try {
       const account = new Account()
       account.userId = user.id

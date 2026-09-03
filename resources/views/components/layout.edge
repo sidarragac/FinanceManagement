@@ -20,7 +20,7 @@
 
       <nav class="flex items-center gap-4">
         @if(auth.isAuthenticated)
-          <a href="{{ route('home') }}" class="text-sm font-medium text-gray-700 hover:text-indigo-600">Dashboard</a>
+          <a href="{{ route('accounts.index') }}" class="text-sm font-medium text-gray-700 hover:text-indigo-600">Accounts</a>
           <form action="{{ route('auth.logout') }}" method="POST" class="inline">
             {{ csrfField() }}
             <button type="submit" class="text-sm font-medium text-red-600 hover:text-red-800">Cerrar Sesión</button>

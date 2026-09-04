@@ -50,4 +50,9 @@ export default class Transaction extends BaseModel {
   // Relación: Una transacción pertenece a una Categoría
   @belongsTo(() => Category)
   declare category: BelongsTo<typeof Category>
+
+  @belongsTo(() => Account, {
+    foreignKey: 'destinationAccountId',
+  })
+  declare destinationAccount: BelongsTo<typeof Account>
 }

@@ -22,6 +22,12 @@ export type ScannedRoutes = {
     'categories.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'transactions.index': { paramsTuple?: []; params?: {} }
+    'transactions.create': { paramsTuple?: []; params?: {} }
+    'transactions.store': { paramsTuple?: []; params?: {} }
+    'transactions.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'transactions.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'transactions.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'home': { paramsTuple?: []; params?: {} }
@@ -33,6 +39,9 @@ export type ScannedRoutes = {
     'categories.index': { paramsTuple?: []; params?: {} }
     'categories.create': { paramsTuple?: []; params?: {} }
     'categories.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'transactions.index': { paramsTuple?: []; params?: {} }
+    'transactions.create': { paramsTuple?: []; params?: {} }
+    'transactions.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   HEAD: {
     'home': { paramsTuple?: []; params?: {} }
@@ -44,6 +53,9 @@ export type ScannedRoutes = {
     'categories.index': { paramsTuple?: []; params?: {} }
     'categories.create': { paramsTuple?: []; params?: {} }
     'categories.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'transactions.index': { paramsTuple?: []; params?: {} }
+    'transactions.create': { paramsTuple?: []; params?: {} }
+    'transactions.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   POST: {
     'auth.register.store': { paramsTuple?: []; params?: {} }
@@ -51,14 +63,17 @@ export type ScannedRoutes = {
     'auth.logout': { paramsTuple?: []; params?: {} }
     'accounts.store': { paramsTuple?: []; params?: {} }
     'categories.store': { paramsTuple?: []; params?: {} }
+    'transactions.store': { paramsTuple?: []; params?: {} }
   }
   PATCH: {
     'accounts.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'transactions.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   DELETE: {
     'accounts.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'transactions.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

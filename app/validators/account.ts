@@ -8,8 +8,4 @@ export const accountValidator = vine.create({
   initialBalance: vine.number().min(0),
 })
 
-export const accountUpdateValidator = vine.create({
-  name: vine.string().trim().minLength(2).maxLength(100).optional(),
-  type: vine.enum(Object.values(AccountType)).optional(),
-  initialBalance: vine.number().min(0).optional(),
-})
+export const accountUpdateValidator = vine.create(accountValidator.schema.partial())

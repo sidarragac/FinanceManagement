@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 
 import Account from '#models/account'
+import AccountService from '#services/account_service'
 import { accountValidator, accountUpdateValidator } from '#validators/account'
 
 export default class AccountsController {
@@ -50,35 +51,37 @@ export default class AccountsController {
     }
   }
 
-  /**
-   * Mostrar el detalle de una cuenta con sus transacciones
-   * GET /accounts/:id
-   */
-  // async show({ auth, params, view, response, session }: HttpContext) {
-  //   const user = auth.getUserOrFail()
+  async show({ auth, params, view, response, session }: HttpContext) {
+    const user = auth.getUserOrFail()
 
-  //   const account = await Account.query()
-  //     .where('id', params.id)
-  //     .where('userId', user.id)
-  //     .first()
+    const account = await Account.query().where('id', params.id).where('userId', user.id).first()
 
-  //   if (!account) {
-  //     session.flash('error', 'La cuenta solicitada no existe o no tienes acceso.')
-  //     return response.redirect().toRoute('accounts.index')
-  //   }
+    if (!account) {
+      session.flash('error', 'La cuenta solicitada no existe o no tienes acceso.')
+      return response.redirect().toRoute('accounts.index')
+    }
 
-  //   const viewData = {
-  //     title: `Cuenta: ${account.name}`,
-  //     account,
-  //   }
+    const transactions = await account
+      .related('transactions')
+      .query()
+      .preload('category')
+      .preload('destinationAccount')
+      .orderBy('transactionDate', 'desc')
+      .orderBy('id', 'desc')
 
-  //   return view.render('pages/accounts/show', { viewData })
-  // }
+    const { totalIncomes, totalExpenses } = await AccountService.calculateAccountMetrics(account.id)
 
-  /**
-   * Mostrar formulario de edición
-   * GET /accounts/:id/edit
-   */
+    const viewData = {
+      title: `Cuenta: ${account.name}`,
+      account,
+      transactions,
+      totalIncomes,
+      totalExpenses,
+    }
+
+    return view.render('pages/accounts/show', { viewData })
+  }
+
   async edit({ auth, params, view, response, session }: HttpContext) {
     const user = auth.getUserOrFail()
 

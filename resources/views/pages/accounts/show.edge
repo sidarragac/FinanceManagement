@@ -1,0 +1,152 @@
+@layout('layouts/main', { title: viewData.title })
+
+  @slot('main')
+    {{-- Header y Acciones --}}
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <a href="{{ route('accounts.index') }}" class="text-sm font-medium text-gray-500 hover:text-gray-900">
+            &larr; Cuentas
+          </a>
+          <span class="text-gray-300">/</span>
+          <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
+            {{ viewData.account.type }}
+          </span>
+        </div>
+        <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">{{ viewData.account.name }}</h1>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a
+          href="{{ route('accounts.edit', { id: viewData.account.id }) }}"
+          class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-50 transition"
+        >
+          Editar Cuenta
+        </a>
+        <a
+          href="{{ route('transactions.create') }}"
+          class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition"
+        >
+          + Nueva Transacción
+        </a>
+      </div>
+    </div>
+
+    {{-- Tarjetas de Resumen Financiero de la Cuenta --}}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      {{-- Saldo Actual --}}
+      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Saldo Actual</p>
+        <p class="text-3xl font-extrabold text-gray-900">${{ Number(viewData.account.initialBalance).toFixed(2) }}</p>
+      </div>
+
+      {{-- Total Ingresos Registrados --}}
+      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Ingresos</p>
+        <p class="text-3xl font-extrabold text-green-600">${{ Number(viewData.totalIncomes || 0).toFixed(2) }}</p>
+      </div>
+
+      {{-- Total Gastos Registrados --}}
+      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Gastos</p>
+        <p class="text-3xl font-extrabold text-red-600">${{ Number(viewData.totalExpenses || 0).toFixed(2) }}</p>
+      </div>
+    </div>
+
+    {{-- Historial de Transacciones de la Cuenta --}}
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+        <h2 class="text-lg font-bold text-gray-900">Historial de Transacciones</h2>
+        <span class="text-xs text-gray-500">{{ viewData.transactions.length }} movimientos encontrados</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
+              <th class="py-3.5 px-4">Fecha</th>
+              <th class="py-3.5 px-4">Tipo</th>
+              <th class="py-3.5 px-4">Descripción / Categoría</th>
+              <th class="py-3.5 px-4 text-right">Monto</th>
+              <th class="py-3.5 px-4 text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 text-sm">
+            @each(tx in viewData.transactions)
+              @let(isSource = tx.accountId === viewData.account.id)
+              <tr class="hover:bg-gray-50 transition">
+                {{-- Fecha --}}
+                <td class="py-4 px-4 font-medium text-gray-900 whitespace-nowrap">
+                  {{ tx.transactionDate.toFormat('dd/MM/yyyy') }}
+                </td>
+
+                {{-- Tipo --}}
+                <td class="py-4 px-4 whitespace-nowrap">
+                  @if(tx.type === 'income')
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800">Ingreso</span>
+                  @elseif(tx.type === 'expense')
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800">Gasto</span>
+                  @else
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
+                      {{ isSource ? 'Transferencia (Salida)' : 'Transferencia (Entrada)' }}
+                    </span>
+                  @endif
+                </td>
+
+                {{-- Descripción / Categoría --}}
+                <td class="py-4 px-4">
+                  <div class="font-bold text-gray-900">{{ tx.description || 'Sin descripción' }}</div>
+                  <div class="text-xs text-gray-500">
+                    @if(tx.type === 'transfer')
+                      @if(isSource)
+                        Hacia: <span class="font-semibold">{{ tx.destinationAccount ? tx.destinationAccount.name : 'N/A' }}</span>
+                      @else
+                        Desde: <span class="font-semibold">{{ tx.account ? tx.account.name : 'N/A' }}</span>
+                      @endif
+                    @else
+                      {{ tx.category ? tx.category.name : 'Sin categoría' }}
+                    @endif
+                  </div>
+                </td>
+
+                {{-- Monto (Formateado con signo positivo/negativo según flujo de caja) --}}
+                <td class="py-4 px-4 text-right font-extrabold whitespace-nowrap {{ tx.type === 'income' || (!isSource && tx.type === 'transfer') ? 'text-green-600' : 'text-red-600' }}">
+                  {{ tx.type === 'income' || (!isSource && tx.type === 'transfer') ? '+' : '-' }}${{ Number(tx.amount).toFixed(2) }}
+                </td>
+
+                {{-- Acciones --}}
+                <td class="py-4 px-4 text-center whitespace-nowrap">
+                  <div class="flex items-center justify-center gap-3">
+                    <a
+                      href="{{ route('transactions.edit', { id: tx.id }) }}"
+                      class="text-indigo-600 hover:text-indigo-900 font-medium text-xs"
+                    >
+                      Editar
+                    </a>
+
+                    <form action="{{ route('transactions.destroy', { id: tx.id }) }}?_method=DELETE" method="POST" class="inline">
+                      {{ csrfField() }}
+                      <button
+                        type="submit"
+                        class="text-red-600 hover:text-red-900 font-medium text-xs"
+                        onclick="return confirm('¿Eliminar transacción? El saldo de la cuenta será revertido automáticamente.')"
+                      >
+                        Eliminar
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            @else
+              <tr>
+                <td colspan="5" class="py-12 text-center text-gray-500">
+                  No hay movimientos registrados en esta cuenta.
+                </td>
+              </tr>
+            @endeach
+          </tbody>
+        </table>
+      </div>
+    </div>
+  @end
+@end

@@ -1,0 +1,96 @@
+@layout('layouts/main', { title: viewData.title })
+
+  @slot('main')
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+      <div>
+        <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">{{ viewData.title }}</h1>
+        <p class="text-sm text-gray-600 mt-1">Historial completo de tus ingresos, gastos y transferencias</p>
+      </div>
+      <a
+        href="{{ route('transactions.create') }}"
+        class="bg-indigo-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm hover:bg-indigo-700 transition duration-150 flex items-center gap-2"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Nueva Transacción
+      </a>
+    </div>
+
+    {{-- Tabla Responsiva de Transacciones --}}
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
+              <th class="py-3.5 px-4">Fecha</th>
+              <th class="py-3.5 px-4">Tipo</th>
+              <th class="py-3.5 px-4">Descripción / Categoría</th>
+              <th class="py-3.5 px-4">Cuenta</th>
+              <th class="py-3.5 px-4 text-right">Monto</th>
+              <th class="py-3.5 px-4 text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 text-sm">
+            @each(tx in viewData.transactions)
+              <tr class="hover:bg-gray-50 transition">
+                <td class="py-4 px-4 font-medium text-gray-900 whitespace-nowrap">
+                  {{ tx.transactionDate.toFormat('dd/MM/yyyy') }}
+                </td>
+                <td class="py-4 px-4 whitespace-nowrap">
+                  @if(tx.type === 'income')
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800">Ingreso</span>
+                  @elseif(tx.type === 'expense')
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800">Gasto</span>
+                  @else
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Transferencia</span>
+                  @endif
+                </td>
+                <td class="py-4 px-4">
+                  <div class="font-bold text-gray-900">{{ tx.description || 'Sin descripción' }}</div>
+                  <div class="text-xs text-gray-500">
+                    @if(tx.type === 'transfer')
+                      Transferencia Interna
+                    @else
+                      {{ tx.category ? tx.category.name : 'Sin categoría' }}
+                    @endif
+                  </div>
+                </td>
+                <td class="py-4 px-4 text-gray-700 whitespace-nowrap">
+                  @if(tx.type === 'transfer')
+                    <span>{{ tx.account.name }}</span>
+                    <span class="text-gray-400 mx-1">&rarr;</span>
+                    <span class="font-semibold">{{ tx.destinationAccount ? tx.destinationAccount.name : 'N/A' }}</span>
+                  @else
+                    {{ tx.account.name }}
+                  @endif
+                </td>
+                <td class="py-4 px-4 text-right font-extrabold whitespace-nowrap {{ tx.type === 'income' ? 'text-green-600' : (tx.type === 'expense' ? 'text-red-600' : 'text-blue-600') }}">
+                  {{ tx.type === 'income' ? '+' : (tx.type === 'expense' ? '-' : '') }}${{ Number(tx.amount).toFixed(2) }}
+                </td>
+                <td class="py-4 px-4 text-center whitespace-nowrap">
+                  <form action="{{ route('transactions.destroy', { id: tx.id }) }}?_method=DELETE" method="POST" class="inline">
+                    {{ csrfField() }}
+                    <button
+                      type="submit"
+                      class="text-red-600 hover:text-red-900 font-medium text-xs"
+                      onclick="return confirm('¿Eliminar transacción? El saldo de la cuenta será revertido automáticamente.')"
+                    >
+                      Eliminar
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            @else
+              <tr>
+                <td colspan="6" class="py-12 text-center text-gray-500">
+                  No hay transacciones registradas.
+                </td>
+              </tr>
+            @endeach
+          </tbody>
+        </table>
+      </div>
+    </div>
+  @end
+@end

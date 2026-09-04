@@ -1,0 +1,81 @@
+@layout('layouts/main', { title: viewData.title })
+
+  @slot('main')
+    <div class="max-w-lg mx-auto">
+      <div class="mb-6 flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">{{ viewData.title }}</h1>
+          <p class="text-sm text-gray-500">Modifica la categoría o nota descriptiva del movimiento</p>
+        </div>
+        <a href="{{ route('transactions.index') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900">
+          &larr; Volver
+        </a>
+      </div>
+
+      <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+        <form action="{{ route('transactions.update', { id: viewData.transaction.id }) }}?_method=PUT" method="POST" class="space-y-5">
+          {{ csrfField() }}
+
+          {{-- Detalles de Solo Lectura --}}
+          <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm space-y-1">
+            <p><span class="font-bold text-gray-700">Tipo:</span>
+              <span class="uppercase font-semibold text-xs px-2 py-0.5 rounded {{ viewData.transaction.type === 'transfer' ? 'bg-blue-100 text-blue-800' : 'bg-gray-200 text-gray-800' }}">
+                {{ viewData.transaction.type }}
+              </span>
+            </p>
+            <p><span class="font-bold text-gray-700">Monto:</span> ${{ Number(viewData.transaction.amount).toFixed(2) }}</p>
+            <p><span class="font-bold text-gray-700">Cuenta Origen:</span> {{ viewData.transaction.account.name }}</p>
+            @if(viewData.transaction.type === 'transfer')
+              <p><span class="font-bold text-gray-700">Cuenta Destino:</span> {{ viewData.transaction.destinationAccount ? viewData.transaction.destinationAccount.name : 'N/A' }}</p>
+            @endif
+          </div>
+
+          {{-- Categoría (Opcional en transferencias) --}}
+          <div>
+            <label for="categoryId" class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+            <select
+              id="categoryId"
+              name="categoryId"
+              class="w-full px-4 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition bg-white"
+            >
+              <option value="" {{ !viewData.transaction.categoryId ? 'selected' : '' }}>Sin categoría / General</option>
+              @each(cat in viewData.categories)
+                <option
+                  value="{{ cat.id }}"
+                  {{ (old('categoryId') || viewData.transaction.categoryId) == cat.id ? 'selected' : '' }}
+                >
+                  {{ cat.name }} ({{ cat.type === 'income' ? 'Ingreso' : 'Gasto' }})
+                </option>
+              @endeach
+            </select>
+          </div>
+
+          {{-- Descripción --}}
+          <div>
+            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Descripción / Notas</label>
+            <input
+              type="text"
+              id="description"
+              name="description"
+              value="{{ old('description') !== undefined ? old('description') : (viewData.transaction.description || '') }}"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition"
+              placeholder="Ej. Transferencia para cubrir gasto de cena"
+            >
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+            <a href="{{ route('transactions.index') }}" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition">
+              Cancelar
+            </a>
+            <button
+              type="submit"
+              class="bg-indigo-600 text-white font-medium px-5 py-2 rounded-lg hover:bg-indigo-700 transition duration-150 shadow-sm text-sm"
+            >
+              Guardar Cambios
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  @end
+@end

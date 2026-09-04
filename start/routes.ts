@@ -55,3 +55,21 @@ router
     router.delete('/categories/:id', [controllers.Categories, 'destroy']).as('categories.destroy')
   })
   .use(middleware.auth())
+
+// Transaction routes
+router
+  .group(() => {
+    router.get('/transactions', [controllers.Transactions, 'index']).as('transactions.index')
+    router
+      .get('/transactions/create', [controllers.Transactions, 'create'])
+      .as('transactions.create')
+    router.post('/transactions', [controllers.Transactions, 'store']).as('transactions.store')
+    router.get('/transactions/:id/edit', [controllers.Transactions, 'edit']).as('transactions.edit')
+    router
+      .patch('/transactions/:id', [controllers.Transactions, 'update'])
+      .as('transactions.update')
+    router
+      .delete('/transactions/:id', [controllers.Transactions, 'destroy'])
+      .as('transactions.destroy')
+  })
+  .use(middleware.auth())

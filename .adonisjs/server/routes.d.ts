@@ -13,6 +13,7 @@ export type ScannedRoutes = {
     'accounts.index': { paramsTuple?: []; params?: {} }
     'accounts.create': { paramsTuple?: []; params?: {} }
     'accounts.store': { paramsTuple?: []; params?: {} }
+    'accounts.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'accounts.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'accounts.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'accounts.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -35,6 +36,7 @@ export type ScannedRoutes = {
     'auth.login.index': { paramsTuple?: []; params?: {} }
     'accounts.index': { paramsTuple?: []; params?: {} }
     'accounts.create': { paramsTuple?: []; params?: {} }
+    'accounts.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'accounts.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.index': { paramsTuple?: []; params?: {} }
     'categories.create': { paramsTuple?: []; params?: {} }
@@ -49,6 +51,7 @@ export type ScannedRoutes = {
     'auth.login.index': { paramsTuple?: []; params?: {} }
     'accounts.index': { paramsTuple?: []; params?: {} }
     'accounts.create': { paramsTuple?: []; params?: {} }
+    'accounts.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'accounts.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'categories.index': { paramsTuple?: []; params?: {} }
     'categories.create': { paramsTuple?: []; params?: {} }

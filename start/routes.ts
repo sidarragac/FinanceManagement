@@ -37,7 +37,7 @@ router
     router.get('accounts', [controllers.Accounts, 'index']).as('accounts.index')
     router.get('accounts/create', [controllers.Accounts, 'create']).as('accounts.create')
     router.post('accounts', [controllers.Accounts, 'store']).as('accounts.store')
-    // router.get('accounts/:id', [controllers.Accounts, 'show']).as('accounts.show')
+    router.get('accounts/:id', [controllers.Accounts, 'show']).as('accounts.show')
     router.get('accounts/:id/edit', [controllers.Accounts, 'edit']).as('accounts.edit')
     router.patch('accounts/:id', [controllers.Accounts, 'update']).as('accounts.update')
     router.delete('accounts/:id', [controllers.Accounts, 'destroy']).as('accounts.destroy')
